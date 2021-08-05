@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +51,7 @@ namespace EmployeePayrollService
                     {
                         Console.WriteLine("No data found");
                     }
+                    dataReader.Close();
                     this.connection.Close(); //closing the connection
                 }
             }
@@ -65,9 +67,10 @@ namespace EmployeePayrollService
             {
                 using (this.connection)
                 {
+                    //Query to perform
                     string query = @"update employee_payroll set basic_pay=3000000 where name='Terissa'";
                     SqlCommand cmd = new SqlCommand(query, this.connection);
-                    this.connection.Open();
+                    this.connection.Open(); //Opening the connection
                     int result = cmd.ExecuteNonQuery();
                     if (result != 0)
                     {
@@ -77,7 +80,7 @@ namespace EmployeePayrollService
                     {
                         Console.WriteLine("Unsuccessful");
                     }
-                    this.connection.Close();
+                    this.connection.Close(); //Closing the connection
                 }
             }
             catch (Exception ex)
@@ -85,7 +88,47 @@ namespace EmployeePayrollService
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public int UpdateSalaryusingPreparedStatement(EmployeeDetails details)
+        {
+            int result;
+            try
+            {
+                using (this.connection)
+                {
+                    //Using stored procedure
+                    SqlCommand command = new SqlCommand("dbo.UpdateEmployeeDetails", this.connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    //Adding the parameters
+                    command.Parameters.AddWithValue("Id", details.EmployeeID);
+                    command.Parameters.AddWithValue("Name", details.EmployeeName);
+                    command.Parameters.AddWithValue("BasicPay", details.BasicPay);
+                    connection.Open(); //Opening the connection
+                    result = command.ExecuteNonQuery();
+                    if (result != 0)
+                    {
+                        Console.WriteLine("Successfully Updated using prepared statement");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not updated successfully");
+                        return default;
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return default;
+            }
+            finally
+            {
+                this.connection.Close(); //Closing the connection
+            }
+        }
     }
 }
+
 
     
