@@ -59,6 +59,33 @@ namespace EmployeePayrollService
             }
         }
 
-
+        public void UpdateSalary(EmployeeDetails details)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    string query = @"update employee_payroll set basic_pay=3000000 where name='Terissa'";
+                    SqlCommand cmd = new SqlCommand(query, this.connection);
+                    this.connection.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result != 0)
+                    {
+                        Console.WriteLine("Salary Updated Successfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unsuccessful");
+                    }
+                    this.connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
+
+    
