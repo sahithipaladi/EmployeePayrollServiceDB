@@ -127,8 +127,57 @@ namespace EmployeePayrollService
                 this.connection.Close(); //Closing the connection
             }
         }
+
+        public void RetrieveDataBetweenDateRange()
+        {
+            try
+            {
+                EmployeeDetails details = new EmployeeDetails();
+                using (this.connection)
+                {
+                    //Query to perfom
+                    string query = @"Select * from employee_payroll where startDate between('2017-12-27') and getDate()";
+                    SqlCommand command = new SqlCommand(query, this.connection);
+                    this.connection.Open(); //Opening the connection
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    //Checking if the table has data
+                    if (dataReader.HasRows)
+                    {
+                        while (dataReader.Read())
+                        {
+                            details.EmployeeID = Convert.ToInt32(dataReader["id"]);
+                            details.EmployeeName = dataReader["name"].ToString();
+                            details.BasicPay = Convert.ToDouble(dataReader["basic_pay"]);
+                            details.StartDate = dataReader.GetDateTime(3);
+                            details.Gender = dataReader["gender"].ToString();
+                            details.PhoneNumber = dataReader["phonenumber"].ToString();
+                            details.Address = dataReader["address"].ToString();
+                            details.Department = dataReader["department"].ToString();
+                            details.Deductions = Convert.ToDouble(dataReader["deductions"]);
+                            details.TaxablePay = Convert.ToDouble(dataReader["taxable_pay"]);
+                            details.IncomeTax = Convert.ToDouble(dataReader["incometax"]);
+                            details.NetPay = Convert.ToDouble(dataReader["net_pay"]);
+                            Console.WriteLine(details.EmployeeName + " " + details.BasicPay + " " + details.StartDate + " " + details.Gender + " " + details.PhoneNumber + " " + details.Address + " " + details.Department + " " + details.Deductions + " " + details.TaxablePay + " " + details.IncomeTax + " " + details.NetPay);
+                            Console.WriteLine("\n");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No data found");
+                    }
+                    dataReader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                this.connection.Close(); //closing the connection
+            }
+        }
     }
 }
 
 
-    
