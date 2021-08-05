@@ -14,6 +14,7 @@ namespace EmployeePayrollService
 
         SqlConnection connection = new SqlConnection(connectionString);
 
+
         public void GetAllEmployee()
         {
             try
@@ -177,7 +178,46 @@ namespace EmployeePayrollService
                 this.connection.Close(); //closing the connection
             }
         }
+
+        public void AggregateFunctions()
+        {
+            string result = null;
+            try
+            {
+                //Query to perform
+                string query = @"select sum(basic_pay) as TotalSalary,avg(basic_pay) as AverageSalary,min(basic_pay) as MinimunSalary,max(basic_pay) as MaximumSalary,gender,Count(*) from employee_payroll group by gender";
+                SqlCommand command = new SqlCommand(query, this.connection);
+                this.connection.Open(); //Opening the connection
+                //DataReader
+                SqlDataReader dataReader = command.ExecuteReader();
+                //Checking if the tabe has data
+                if (dataReader.HasRows)
+                {
+                    while (dataReader.Read())
+                    {
+                        Console.WriteLine("Total Salary : " + dataReader[0]);
+                        Console.WriteLine("Average Salary : " + dataReader[1]);
+                        Console.WriteLine("Minimum Salary : " + dataReader[2]);
+                        Console.WriteLine("Maximum Salary : " + dataReader[3]);
+                        Console.WriteLine("Gender : " + dataReader[4]);
+                        Console.WriteLine("No. of Employees : " + dataReader[5]);
+                        result += dataReader[4] + " " + dataReader[0] + " " + dataReader[1] + " " + dataReader[2] + " " + dataReader[3] + " " + dataReader[5];
+                    }
+                }
+                dataReader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                this.connection.Close(); //Closing the connection
+            }
+        }
     }
 }
+    
+
 
 
