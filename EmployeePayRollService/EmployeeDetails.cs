@@ -19,7 +19,7 @@ namespace EmployeePayrollService
             public double BasicPay { get; set; }
             public double Deductions { get; set; }
             public double TaxablePay { get; set; }
-            public double NetPay { get; set; }
+            public double Net_Pay { get; set; }
             public double IncomeTax { get; set; }
             public DateTime StartDate { get; set; }
         }

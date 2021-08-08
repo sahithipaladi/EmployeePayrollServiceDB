@@ -14,6 +14,7 @@ namespace EmployeePayrollService
         public static string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=payroll_service;";
         SqlConnection connection = new SqlConnection(connectionString);
 
+
         public void GetAllEmployee()
         {
             try
@@ -42,8 +43,8 @@ namespace EmployeePayrollService
                             details.Deductions = Convert.ToDouble(dataReader["deductions"]);
                             details.TaxablePay = Convert.ToDouble(dataReader["taxable_pay"]);
                             details.IncomeTax = Convert.ToDouble(dataReader["incometax"]);
-                            details.NetPay = Convert.ToDouble(dataReader["net_pay"]);
-                            Console.WriteLine(details.EmployeeName + " " + details.BasicPay + " " + details.StartDate + " " + details.Gender + " " + details.PhoneNumber + " " + details.Address + " " + details.Department + " " + details.Deductions + " " + details.TaxablePay + " " + details.IncomeTax + " " + details.NetPay);
+                            details.Net_Pay = Convert.ToDouble(dataReader["net_pay"]);
+                            Console.WriteLine(details.EmployeeName + " " + details.BasicPay + " " + details.StartDate + " " + details.Gender + " " + details.PhoneNumber + " " + details.Address + " " + details.Department + " " + details.Deductions + " " + details.TaxablePay + " " + details.IncomeTax + " " + details.Net_Pay);
                             Console.WriteLine("\n");
                         }
                     }
@@ -156,8 +157,8 @@ namespace EmployeePayrollService
                             details.Deductions = Convert.ToDouble(dataReader["deductions"]);
                             details.TaxablePay = Convert.ToDouble(dataReader["taxable_pay"]);
                             details.IncomeTax = Convert.ToDouble(dataReader["incometax"]);
-                            details.NetPay = Convert.ToDouble(dataReader["net_pay"]);
-                            Console.WriteLine(details.EmployeeName + " " + details.BasicPay + " " + details.StartDate + " " + details.Gender + " " + details.PhoneNumber + " " + details.Address + " " + details.Department + " " + details.Deductions + " " + details.TaxablePay + " " + details.IncomeTax + " " + details.NetPay);
+                            details.Net_Pay = Convert.ToDouble(dataReader["net_pay"]);
+                            Console.WriteLine(details.EmployeeName + " " + details.BasicPay + " " + details.StartDate + " " + details.Gender + " " + details.PhoneNumber + " " + details.Address + " " + details.Department + " " + details.Deductions + " " + details.TaxablePay + " " + details.IncomeTax + " " + details.Net_Pay);
                             Console.WriteLine("\n");
                         }
                     }
@@ -214,8 +215,49 @@ namespace EmployeePayrollService
                 this.connection.Close(); //Closing the connection
             }
         }
+
+        public bool AddEmployee(EmployeeDetails details)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    //Using stored procedure
+                    SqlCommand command = new SqlCommand("dbo.InsertIntoTable", this.connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    //Adding the parameters
+                    command.Parameters.AddWithValue("@Id", details.EmployeeID);
+                    command.Parameters.AddWithValue("@Name", details.EmployeeName);
+                    command.Parameters.AddWithValue("@BasicPay", details.BasicPay);
+                    command.Parameters.AddWithValue("@StartDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@Gender", details.Gender);
+                    command.Parameters.AddWithValue("@PhoneNumber", details.PhoneNumber);
+                    command.Parameters.AddWithValue("@Address", details.Address);
+                    command.Parameters.AddWithValue("@Department", details.Department);
+                    command.Parameters.AddWithValue("@TaxablePay", details.TaxablePay);
+                    command.Parameters.AddWithValue("@Deductions", details.Deductions);
+                    command.Parameters.AddWithValue("@NetPay", details.Net_Pay);
+                    command.Parameters.AddWithValue("@IncomeTax", details.IncomeTax);
+                    this.connection.Open(); //Opening the connection
+                    var result = command.ExecuteNonQuery();
+                    if (result != 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                this.connection.Close();//Closing the connection
+            }
+            return false;
+        }
+
+      
     }
 }
-
-
-
