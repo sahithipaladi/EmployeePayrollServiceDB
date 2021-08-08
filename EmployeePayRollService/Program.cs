@@ -21,7 +21,7 @@ namespace EmployeePayrollService
             details.Deductions = 100;
             details.Net_Pay = 20000;
             details.IncomeTax = 200;
-            bool result = repository.AddEmployee(details);
+            bool result = repository.RemoveEmployee(10);
             if (result)
                 Console.WriteLine("Successfully removed");
             else
