@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace EmployeePayrollService
 {
     public class EmployeeRepository
     {
         //Connecting to database
         public static string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=payroll_service;";
-
         SqlConnection connection = new SqlConnection(connectionString);
-
 
         public void GetAllEmployee()
         {
@@ -217,7 +216,6 @@ namespace EmployeePayrollService
         }
     }
 }
-    
 
 
 
